@@ -1,10 +1,12 @@
 .vs/
-x64/
+x64/*
+!x64/Debug/
+x64/Debug/*
+!x64/Debug/NavFusion.exe
 Debug/
 Release/
 build/
 build-*/
-sj/
 
 *.user
 *.suo
@@ -20,6 +22,7 @@ sj/
 *.pdb
 *.ilk
 *.exe
+!x64/Debug/NavFusion.exe
 *.dll
 *.lib
 *.exp
