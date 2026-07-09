@@ -131,30 +131,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
-    <ClCompile Include="Geo.cpp" />
-    <ClCompile Include="ImuReader.cpp" />
-    <ClCompile Include="InsSolver.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Plot.cpp" />
+    <ClCompile Include="App.cpp" />
     <ClCompile Include="ProcessingPipeline.cpp" />
     <ClCompile Include="RinexReader.cpp" />
-    <ClCompile Include="RtkInsLoose.cpp" />
-    <ClCompile Include="RtkSolver.cpp" />
+    <ClCompile Include="Geo.cpp" />
     <ClCompile Include="SppSolver.cpp" />
+    <ClCompile Include="RtkSolver.cpp" />
+    <ClCompile Include="ImuReader.cpp" />
+    <ClCompile Include="InsSolver.cpp" />
+    <ClCompile Include="RtkInsLoose.cpp" />
+    <ClCompile Include="Plot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="ProcessingPipeline.h" />
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="RinexReader.h" />
     <ClInclude Include="Geo.h" />
+    <ClInclude Include="SppSolver.h" />
+    <ClInclude Include="RtkSolver.h" />
     <ClInclude Include="ImuReader.h" />
     <ClInclude Include="InsSolver.h" />
-    <ClInclude Include="Plot.h" />
-    <ClInclude Include="ProcessingPipeline.h" />
-    <ClInclude Include="RinexReader.h" />
     <ClInclude Include="RtkInsLoose.h" />
-    <ClInclude Include="RtkSolver.h" />
-    <ClInclude Include="SppSolver.h" />
-    <ClInclude Include="Types.h" />
+    <ClInclude Include="Plot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

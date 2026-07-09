@@ -5,9 +5,57 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="源文件\01_入口与界面">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bc001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\02_流程与类型">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bc002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\03_数据读取与坐标">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bc003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\04_SPP">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bc004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\05_RTK">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bc005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\06_INS">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bc006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\07_RTK_INS松组合">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bc007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\08_结果输出">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bc008}</UniqueIdentifier>
+    </Filter>
     <Filter Include="头文件">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="头文件\01_入口与界面">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bd001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\02_流程与类型">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bd002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\03_数据读取与坐标">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bd003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\04_SPP">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bd004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\05_RTK">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bd005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\06_INS">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bd006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\07_RTK_INS松组合">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bd007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\08_结果输出">
+      <UniqueIdentifier>{f8d2d28e-8473-4979-b066-02f1181bd008}</UniqueIdentifier>
     </Filter>
     <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -15,73 +63,73 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Geo.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ImuReader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="InsSolver.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\01_入口与界面</Filter>
     </ClCompile>
-    <ClCompile Include="Plot.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="App.cpp">
+      <Filter>源文件\01_入口与界面</Filter>
     </ClCompile>
     <ClCompile Include="ProcessingPipeline.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\02_流程与类型</Filter>
     </ClCompile>
     <ClCompile Include="RinexReader.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\03_数据读取与坐标</Filter>
     </ClCompile>
-    <ClCompile Include="RtkInsLoose.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="RtkSolver.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="Geo.cpp">
+      <Filter>源文件\03_数据读取与坐标</Filter>
     </ClCompile>
     <ClCompile Include="SppSolver.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\04_SPP</Filter>
+    </ClCompile>
+    <ClCompile Include="RtkSolver.cpp">
+      <Filter>源文件\05_RTK</Filter>
+    </ClCompile>
+    <ClCompile Include="ImuReader.cpp">
+      <Filter>源文件\06_INS</Filter>
+    </ClCompile>
+    <ClCompile Include="InsSolver.cpp">
+      <Filter>源文件\06_INS</Filter>
+    </ClCompile>
+    <ClCompile Include="RtkInsLoose.cpp">
+      <Filter>源文件\07_RTK_INS松组合</Filter>
+    </ClCompile>
+    <ClCompile Include="Plot.cpp">
+      <Filter>源文件\08_结果输出</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Geo.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ImuReader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="InsSolver.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Plot.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\01_入口与界面</Filter>
     </ClInclude>
     <ClInclude Include="ProcessingPipeline.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RinexReader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RtkInsLoose.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RtkSolver.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="SppSolver.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\02_流程与类型</Filter>
     </ClInclude>
     <ClInclude Include="Types.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\02_流程与类型</Filter>
+    </ClInclude>
+    <ClInclude Include="RinexReader.h">
+      <Filter>头文件\03_数据读取与坐标</Filter>
+    </ClInclude>
+    <ClInclude Include="Geo.h">
+      <Filter>头文件\03_数据读取与坐标</Filter>
+    </ClInclude>
+    <ClInclude Include="SppSolver.h">
+      <Filter>头文件\04_SPP</Filter>
+    </ClInclude>
+    <ClInclude Include="RtkSolver.h">
+      <Filter>头文件\05_RTK</Filter>
+    </ClInclude>
+    <ClInclude Include="ImuReader.h">
+      <Filter>头文件\06_INS</Filter>
+    </ClInclude>
+    <ClInclude Include="InsSolver.h">
+      <Filter>头文件\06_INS</Filter>
+    </ClInclude>
+    <ClInclude Include="RtkInsLoose.h">
+      <Filter>头文件\07_RTK_INS松组合</Filter>
+    </ClInclude>
+    <ClInclude Include="Plot.h">
+      <Filter>头文件\08_结果输出</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
