@@ -148,3 +148,15 @@ struct TrajectoryPoint {
 // SPP、RTK、INS 松组合最终都统一输出成 Trajectory，
 // 这样 Plot 模块不需要关心轨迹来自哪个算法。
 using Trajectory = std::vector<TrajectoryPoint>;
+
+// Allan variance result for one IMU averaging time.
+struct AllanPoint {
+    double tau = 0.0;
+    int samplesPerCluster = 0;
+    Vec3 gyroVariance;
+    Vec3 gyroDeviation;
+    Vec3 accVariance;
+    Vec3 accDeviation;
+};
+
+using AllanSeries = std::vector<AllanPoint>;

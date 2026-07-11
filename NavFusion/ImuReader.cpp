@@ -1,6 +1,7 @@
 #include "ImuReader.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <fstream>
 #include <stdexcept>
@@ -44,7 +45,7 @@ std::vector<ImuSample> readImrFile(const std::string& path) {
     }
 
     constexpr double gyroDeltaScale = 1.0e-9;
-    constexpr double accelDeltaScale = 3.0e-10;
+    constexpr double accelDeltaScale = 1.0e-11;
 
     std::vector<ImuSample> samples;
     samples.reserve(420000);
@@ -71,5 +72,12 @@ std::vector<ImuSample> readImrFile(const std::string& path) {
         lastTime = time;
         hasLast = true;
     }
+
+    std::sort(samples.begin(), samples.end(), [](const ImuSample& a, const ImuSample& b) {
+        return a.time < b.time;
+    });
+    samples.erase(std::unique(samples.begin(), samples.end(), [](const ImuSample& a, const ImuSample& b) {
+        return std::abs(a.time - b.time) < 1.0e-7;
+    }), samples.end());
     return samples;
 }

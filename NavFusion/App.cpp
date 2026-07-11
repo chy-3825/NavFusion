@@ -31,7 +31,7 @@ using namespace std;
 namespace {
 
 constexpr int kWidth = 1420;
-constexpr int kHeight = 590;
+constexpr int kHeight = 640;
 
 enum ControlId {
     // 所有控件ID集中管理，便于WM_COMMAND里区分按钮和输入框。
@@ -50,8 +50,11 @@ enum ControlId {
     IdStep3,
     IdStep4,
     IdStep5,
+    IdStep6,
     IdSavePreview,
     IdSaveCsv,
+    IdSaveAllanPreview,
+    IdSaveAllanCsv,
     IdLog = 400,
     IdImageTitle,
     IdImage
@@ -61,6 +64,8 @@ HWND gMain = nullptr;
 HBITMAP gPreviewBitmap = nullptr;
 wstring gCurrentPreviewPath;
 wstring gCurrentCsvPath;
+wstring gCurrentAllanPreviewPath;
+wstring gCurrentAllanCsvPath;
 
 wstring widen(const string& s) {
     // UI使用Unicode宽字符，处理管线内部使用std::string路径。
@@ -173,6 +178,12 @@ void cleanupOutputDir(const wstring& outDir) {
         L"rtkins_loose_trajectory.csv",
         L"rtkins_loose_trajectory.svg",
         L"rtkins_loose_trajectory.bmp",
+        L"pure_ins_trajectory.csv",
+        L"pure_ins_trajectory.svg",
+        L"pure_ins_trajectory.bmp",
+        L"allan_variance.csv",
+        L"allan_variance.svg",
+        L"allan_variance.bmp",
         L"run_spp_default_result.txt",
         L"run_spp_default_marker.txt"
     };
@@ -201,6 +212,13 @@ void showPreview(const wstring& title, const wstring& imagePath, const wstring& 
     gCurrentCsvPath = csvPath;
     EnableWindow(item(IdSavePreview), TRUE);
     EnableWindow(item(IdSaveCsv), TRUE);
+}
+
+void setAllanResult(const wstring& imagePath, const wstring& csvPath) {
+    gCurrentAllanPreviewPath = imagePath;
+    gCurrentAllanCsvPath = csvPath;
+    EnableWindow(item(IdSaveAllanPreview), TRUE);
+    EnableWindow(item(IdSaveAllanCsv), TRUE);
 }
 
 bool saveExistingFile(HWND parent,
@@ -257,6 +275,24 @@ void saveCurrentCsv(HWND parent) {
                      L"CSV file (*.csv)\0*.csv\0All Files\0*.*\0",
                      L"csv",
                      L"trajectory.csv");
+}
+
+void saveCurrentAllanPreview(HWND parent) {
+    saveExistingFile(parent,
+                     gCurrentAllanPreviewPath,
+                     L"Save Allan variance image",
+                     L"BMP image (*.bmp)\0*.bmp\0All Files\0*.*\0",
+                     L"bmp",
+                     L"allan_variance.bmp");
+}
+
+void saveCurrentAllanCsv(HWND parent) {
+    saveExistingFile(parent,
+                     gCurrentAllanCsvPath,
+                     L"Save Allan variance CSV",
+                     L"CSV file (*.csv)\0*.csv\0All Files\0*.*\0",
+                     L"csv",
+                     L"allan_variance.csv");
 }
 
 PipelineInputs inputsFromUi() {
@@ -322,12 +358,13 @@ void createPathRow(HWND parent, int y, const wchar_t* label, int editId, int bro
 }
 
 void setStepEnabled(int maxStep) {
-    // 控制步骤按钮逐步解锁：上一阶段成功后才能运行下一阶段。
+    // GNSS processing is sequential, while pure INS only needs the IMR input check.
     EnableWindow(item(IdStep1), TRUE);
     EnableWindow(item(IdStep2), maxStep >= 2);
     EnableWindow(item(IdStep3), maxStep >= 3);
     EnableWindow(item(IdStep4), maxStep >= 4);
     EnableWindow(item(IdStep5), maxStep >= 5);
+    EnableWindow(item(IdStep6), maxStep >= 2);
 }
 
 void runStep(int id) {
@@ -340,7 +377,7 @@ void runStep(int id) {
             appendLog(result);
             if (stepSucceeded(result)) {
                 setStepEnabled(2);
-                setText(IdImageTitle, L"Step 1 checked. Run Step 2 to generate the first trajectory preview.");
+                setText(IdImageTitle, L"Step 1 checked. Run SPP or pure INS/Allan next.");
             }
         } else if (id == IdStep2) {
             appendLog("Step 2: SPP trajectory...");
@@ -381,6 +418,17 @@ void runStep(int id) {
                             pathJoin(getText(IdOutDirEdit), L"rtkins_loose_trajectory.bmp"),
                             pathJoin(getText(IdOutDirEdit), L"rtkins_loose_trajectory.csv"));
             }
+        } else if (id == IdStep6) {
+            appendLog("Pure INS and Allan variance...");
+            const string result = runPureInsAllanStep(in);
+            appendLog(result);
+            if (stepSucceeded(result)) {
+                showPreview(L"IMU Allan variance analysis",
+                            pathJoin(getText(IdOutDirEdit), L"allan_variance.bmp"),
+                            pathJoin(getText(IdOutDirEdit), L"allan_variance.csv"));
+                setAllanResult(pathJoin(getText(IdOutDirEdit), L"allan_variance.bmp"),
+                               pathJoin(getText(IdOutDirEdit), L"allan_variance.csv"));
+            }
         }
     } catch (const exception& e) {
         appendLog(string("ERROR: ") + e.what());
@@ -418,9 +466,11 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
                       500, 222, 150, 34, hwnd, controlMenu(IdStep4), nullptr, nullptr);
         CreateWindowW(L"BUTTON", L"5 RTK/INS LC", WS_CHILD | WS_VISIBLE,
                       660, 222, 170, 34, hwnd, controlMenu(IdStep5), nullptr, nullptr);
+        CreateWindowW(L"BUTTON", L"INS + Allan", WS_CHILD | WS_VISIBLE,
+                      20, 264, 180, 34, hwnd, controlMenu(IdStep6), nullptr, nullptr);
         CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"",
                         WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL,
-                        20, 274, 825, 230, hwnd, controlMenu(IdLog), nullptr, nullptr);
+                        20, 310, 825, 230, hwnd, controlMenu(IdLog), nullptr, nullptr);
         CreateWindowW(L"STATIC", L"Preview", WS_CHILD | WS_VISIBLE,
                       880, 20, 520, 24, hwnd, controlMenu(IdImageTitle), nullptr, nullptr);
         CreateWindowExW(WS_EX_CLIENTEDGE, L"STATIC", L"",
@@ -430,12 +480,18 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
                       880, 424, 180, 30, hwnd, controlMenu(IdSavePreview), nullptr, nullptr);
         CreateWindowW(L"BUTTON", L"Save current CSV...", WS_CHILD | WS_VISIBLE,
                       1070, 424, 180, 30, hwnd, controlMenu(IdSaveCsv), nullptr, nullptr);
+        CreateWindowW(L"BUTTON", L"Save Allan image...", WS_CHILD | WS_VISIBLE,
+                      880, 462, 180, 30, hwnd, controlMenu(IdSaveAllanPreview), nullptr, nullptr);
+        CreateWindowW(L"BUTTON", L"Save Allan CSV...", WS_CHILD | WS_VISIBLE,
+                      1070, 462, 180, 30, hwnd, controlMenu(IdSaveAllanCsv), nullptr, nullptr);
         CreateWindowW(L"STATIC", L"Each successful calculation step writes CSV/SVG/BMP files and shows the BMP preview here.",
                       WS_CHILD | WS_VISIBLE,
-                      880, 462, 520, 40, hwnd, nullptr, nullptr, nullptr);
+                      880, 500, 520, 40, hwnd, nullptr, nullptr, nullptr);
         setStepEnabled(1);
         EnableWindow(item(IdSavePreview), FALSE);
         EnableWindow(item(IdSaveCsv), FALSE);
+        EnableWindow(item(IdSaveAllanPreview), FALSE);
+        EnableWindow(item(IdSaveAllanCsv), FALSE);
         appendLog("Select rover O, navigation P, IMR, base O and output directory, then run the steps in order.");
         return 0;
     case WM_COMMAND:
@@ -460,6 +516,7 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         case IdStep3:
         case IdStep4:
         case IdStep5:
+        case IdStep6:
             runStep(LOWORD(wp));
             break;
         case IdSavePreview:
@@ -467,6 +524,12 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
             break;
         case IdSaveCsv:
             saveCurrentCsv(hwnd);
+            break;
+        case IdSaveAllanPreview:
+            saveCurrentAllanPreview(hwnd);
+            break;
+        case IdSaveAllanCsv:
+            saveCurrentAllanCsv(hwnd);
             break;
         }
         return 0;

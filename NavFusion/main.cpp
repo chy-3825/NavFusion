@@ -82,12 +82,14 @@ std::string narrow(const std::wstring& s) {
 int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int showCmd) {
     // 正常运行时进入 Win32 界面；带测试参数时直接跑默认数据，方便回归验证。
     const wchar_t* cmd = GetCommandLineW();
-    if (hasArg(cmd, L"--run-spp-default") || hasArg(cmd, L"--run-all-default")) {
+    if (hasArg(cmd, L"--run-spp-default") || hasArg(cmd, L"--run-all-default") || hasArg(cmd, L"--run-ins-default")) {
         const std::wstring rootW = findProjectRoot();
-        const std::wstring outW = pathJoin(rootW, L"output");
+        const std::wstring outW = pathJoin(rootW, hasArg(cmd, L"--run-ins-default") ? L"output_check" : L"output");
         CreateDirectoryW(outW.c_str(), nullptr);
         const std::string root = narrow(rootW);
-        const std::string resultPath = narrow(pathJoin(outW, L"run_spp_default_result.txt"));
+        const std::string resultPath = narrow(pathJoin(
+            outW,
+            hasArg(cmd, L"--run-ins-default") ? L"run_ins_default_result.txt" : L"run_spp_default_result.txt"));
 
         PipelineInputs inputs;
         inputs.roverObsPath = root + "\\sj\\Observation.26o";
@@ -98,11 +100,16 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int showCmd) {
 
         try {
             std::ofstream result(resultPath);
-            result << runSppStep(inputs);
-            if (hasArg(cmd, L"--run-all-default")) {
+            if (hasArg(cmd, L"--run-ins-default")) {
+                result << runPureInsAllanStep(inputs);
+            } else {
+                result << runSppStep(inputs);
+            }
+            if (!hasArg(cmd, L"--run-ins-default") && hasArg(cmd, L"--run-all-default")) {
                 result << "\n" << runRtkFloatStep(inputs);
                 result << "\n" << runRtkFixedStep(inputs);
                 result << "\n" << runRtkInsLooseStep(inputs);
+                result << "\n" << runPureInsAllanStep(inputs);
             }
         } catch (const std::exception& e) {
             std::ofstream result(resultPath);

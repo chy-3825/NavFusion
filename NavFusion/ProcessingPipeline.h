@@ -66,3 +66,6 @@ std::string runRtkFixedStep(const PipelineInputs& inputs);
 // 先得到 RTK fixed/smoothed 轨迹，再读取 IMR 数据做 INS 预测，
 // 最后输出 rtkins_loose_trajectory.csv/svg/bmp。
 std::string runRtkInsLooseStep(const PipelineInputs& inputs);
+
+// Step 6: pure INS mechanization and Allan variance analysis from IMR data.
+std::string runPureInsAllanStep(const PipelineInputs& inputs);

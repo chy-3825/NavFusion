@@ -30,3 +30,10 @@ void writeTrajectorySvg(const std::string& path, const Trajectory& trajectory, c
 // 写 BMP 轨迹图。
 // Win32 界面右侧预览区主要加载这个文件。
 void writeTrajectoryBmp(const std::string& path, const Trajectory& trajectory);
+
+// Write Allan variance/deviation numeric output.
+void writeAllanCsv(const std::string& path, const AllanSeries& allan);
+
+// Write a compact Allan deviation plot for gyro and accelerometer magnitudes.
+void writeAllanSvg(const std::string& path, const AllanSeries& allan, const std::string& title);
+void writeAllanBmp(const std::string& path, const AllanSeries& allan);

@@ -31,3 +31,6 @@
 // 根据 IMU 采样序列积分得到相对位移轨迹。
 // 返回的 Trajectory 不是绝对 GNSS 坐标，而是供松组合使用的相对运动信息。
 Trajectory mechanizeIns(const std::vector<ImuSample>& imu);
+
+// Compute Allan variance/deviation for gyro and accelerometer triads.
+AllanSeries computeAllanVariance(const std::vector<ImuSample>& imu);

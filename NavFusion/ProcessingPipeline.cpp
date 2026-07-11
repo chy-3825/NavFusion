@@ -5,6 +5,7 @@
 #include <string>
 
 #include "ImuReader.h"
+#include "InsSolver.h"
 #include "Plot.h"
 #include "RinexReader.h"
 #include "RtkInsLoose.h"
@@ -141,4 +142,22 @@ string runRtkInsLooseStep(const PipelineInputs& inputs) {
     writeTrajectoryBmp(pathJoin(inputs.outDir, "rtkins_loose_trajectory.bmp"), trajectory);
     return "RTK/INS loose-coupled trajectory files generated.\r\n"
            "Current build reads IMR samples, runs a basic INS prediction and updates it with the RTK fixed trajectory.\r\n";
+}
+
+string runPureInsAllanStep(const PipelineInputs& inputs) {
+    const string msg = checkInputFiles(inputs);
+    if (hasBlockingInputError(msg)) return msg;
+
+    const auto imu = readImrFile(inputs.imuPath);
+    const auto trajectory = mechanizeIns(imu);
+    const auto allan = computeAllanVariance(imu);
+    _mkdir(inputs.outDir.c_str());
+    writeTrajectoryCsv(pathJoin(inputs.outDir, "pure_ins_trajectory.csv"), trajectory);
+    writeTrajectorySvg(pathJoin(inputs.outDir, "pure_ins_trajectory.svg"), trajectory, "Pure INS trajectory");
+    writeTrajectoryBmp(pathJoin(inputs.outDir, "pure_ins_trajectory.bmp"), trajectory);
+    writeAllanCsv(pathJoin(inputs.outDir, "allan_variance.csv"), allan);
+    writeAllanSvg(pathJoin(inputs.outDir, "allan_variance.svg"), allan, "IMU Allan deviation");
+    writeAllanBmp(pathJoin(inputs.outDir, "allan_variance.bmp"), allan);
+    return "Pure INS trajectory and Allan variance analysis generated.\r\n"
+           "Generated pure_ins_trajectory.csv/svg/bmp and allan_variance.csv/svg/bmp.\r\n";
 }
